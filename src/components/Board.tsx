@@ -3,9 +3,10 @@ import Square from './Square';
 
 export type SqareProps = {
     value: "X" | "O" | null;
-    isDisabled: boolean;
-    nextMove: string;
-    handleClick: () => void
+    is_disabled: boolean;
+    next_move: string;
+    is_winning_cell: boolean;
+    handle_click: () => void
 }
 
 const EMPTY_TABLE = Array(9).fill(null);
@@ -25,11 +26,21 @@ export default function Board(){
     let [table, setTable] = useState(EMPTY_TABLE);
     let [isX, setIsX] = useState(true);
     let [isDone, setIsDone] = useState(false);
+    let [winningLine, setWinningLine] = useState<[number, number, number] | null>(null);
 
     let row_style = {display: "flex"};
 
-    function checkWinner(board: (string | null)[]){
-       return WINNING_LINES.some(([a, b, c]) => board[a] != null && board[a] == board[b] && board[a] == board[c]);
+    function checkWinner(board: (string | null)[]): any{
+       for (const [a, b, c] of WINNING_LINES) {
+        if (
+            board[a] !== null &&
+            board[a] === board[b] &&
+            board[a] === board[c]
+        ) {
+            return [a, b, c];
+        }
+    }
+    return null;
     }
 
     function handleSqareClick(cell: number){
@@ -37,9 +48,11 @@ export default function Board(){
 
         let nextTable =table.map((value, index) => index == cell ? isX ? "X" : "O" : value);
         setTable(nextTable);
-        let winner = checkWinner(nextTable);
-        if(winner)
+        let line = checkWinner(nextTable);
+        if(line){
+            setWinningLine(line);
             setIsDone(true);
+        }
         else
             setIsX(!isX);
     }
@@ -48,18 +61,26 @@ export default function Board(){
         setTable(EMPTY_TABLE)
         setIsDone(false);
         setIsX(true);
+        setWinningLine(null);
     }
 
     return (
         <>
         {isDone 
         ? <><button className="reset_btn" onClick={resetGame}>Reset</button><p>The Winner is {isX ? "X" : "O"}</p></>
-        : <p>It is {isX ? "X" : "O"} turn</p>}
+        : <p><b>It is {isX ? "X" : "O"} turn</b></p>}
         {
         [0,3,6].map((i) => (
         <div style={row_style}>
             {[i, i + 1, i + 2].map((j) => (
-                <Square key={j} value={table[j]} handleClick={() => handleSqareClick(j)} isDisabled={isDone} nextMove={isX ? "X" : "O"}/> 
+                <Square 
+                key={j} 
+                value={table[j]} 
+                handle_click={() => handleSqareClick(j)} 
+                is_disabled={isDone} 
+                next_move={isX ? "X" : "O"} 
+                is_winning_cell={winningLine?.includes(j) ?? false}
+                /> 
             ))}
         </div>
         ))}
