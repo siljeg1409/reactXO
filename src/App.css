@@ -85,7 +85,16 @@
   color: #FFF;
 }
 
-.winner{
-  background-color: green;
+.square.winner:disabled{
+  background-color: green !important;
   color: #FFF;
+}
+
+.row {
+  display: flex;
+}
+
+.status {
+  min-height: 1.5em; /* reserves space */
+  font-weight: bold;
 }
