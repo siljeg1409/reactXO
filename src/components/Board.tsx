@@ -91,7 +91,7 @@ export default function Board(){
     return (
         <>
         <p className="status">
-            {isDone ? `The winner is ${current_player}.` : `It is ${current_player} turn`}
+            {isDone ? `The winner is ${current_player}` : `It is ${current_player} turn`}
         </p>
         <Row>
             <Square key="0" cellValue={table[0]}  handleClick={() => handleSqareClick(0)} isDisabled={isDone} nextMove={current_player} isWinningCell={winningLine?.includes(0) ?? false}/>
