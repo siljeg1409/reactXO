@@ -4,9 +4,11 @@ import Square from './Square';
 export type SqareProps = {
     value: "X" | "O" | null;
     isDisabled: boolean;
+    nextMove: string;
     handleClick: () => void
 }
 
+const EMPTY_TABLE = Array(9).fill(null);
 const WINNING_LINES = [
     [0, 1, 2],
     [3, 4, 5],
@@ -20,7 +22,7 @@ const WINNING_LINES = [
   
 
 export default function Board(){
-    let [table, setTable] = useState(Array(9).fill(null));
+    let [table, setTable] = useState(EMPTY_TABLE);
     let [isX, setIsX] = useState(true);
     let [isDone, setIsDone] = useState(false);
 
@@ -42,16 +44,22 @@ export default function Board(){
             setIsX(!isX);
     }
 
+    function resetGame(){
+        setTable(EMPTY_TABLE)
+        setIsDone(false);
+        setIsX(true);
+    }
+
     return (
         <>
         {isDone 
-        ? <p>The Winner is {isX ? "X" : "O"}</p> 
+        ? <><button className="reset_btn" onClick={resetGame}>Reset</button><p>The Winner is {isX ? "X" : "O"}</p></>
         : <p>It is {isX ? "X" : "O"} turn</p>}
         {
         [0,3,6].map((i) => (
         <div style={row_style}>
             {[i, i + 1, i + 2].map((j) => (
-                <Square key={j} value={table[j]} handleClick={() => handleSqareClick(j)} isDisabled={isDone}/> 
+                <Square key={j} value={table[j]} handleClick={() => handleSqareClick(j)} isDisabled={isDone} nextMove={isX ? "X" : "O"}/> 
             ))}
         </div>
         ))}

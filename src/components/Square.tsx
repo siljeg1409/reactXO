@@ -1,21 +1,13 @@
 
 import type {SqareProps} from './Board';
+import "../App.css";
 
-export default function Square({value, handleClick, isDisabled}: SqareProps){
+export default function Square({value, handleClick, isDisabled, nextMove}: SqareProps){
 
-    let square_style = {
-        border: "1px solid black",
-        width: "100px",
-        height: "100px",
-        alignItems: "center",
-        justifyContent: "center",
-        fontSize: "30px",
-        backgroundColor: "indigo",
-        color: "#FFF"
-    };
+
 
     return (
-        <button style={square_style} onClick={handleClick} disabled={isDisabled}>{value}</button>
+        <button className="square" onClick={handleClick} disabled={isDisabled} data-next_value={value ? "" : nextMove}>{value}</button>
     ); 
-    
+
 }
